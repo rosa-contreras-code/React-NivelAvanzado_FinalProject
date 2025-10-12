@@ -1,0 +1,34 @@
+.sidebar {
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--color-secondary);
+}
+
+.sidebar .nav-link {
+  color: var(--color-text-main);
+  font-weight: 500;
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+.sidebar .nav-link:hover {
+  background-color: var(--color-count);
+  color: #404040;
+}
+
+.sidebar .nav-link.active {
+  background-color: #8da8bd;
+  /* color: #fff; */
+  font-weight: 600;
+}
+
+.sidebar .nav-link.active > *{
+  /* color: #fff; */
+  font-weight: 600;
+}
+
+.countBadge{
+  background-color: var(--color-count);
+}
+
