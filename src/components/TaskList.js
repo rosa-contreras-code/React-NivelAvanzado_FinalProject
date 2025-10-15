@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import TaskItem from "../components/TaskItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,23 +7,47 @@ import {faHome
 import { useParams } from "react-router-dom";
 
 function TaskList({ tasks, setTasks, setSelectedTask }) {
-  const { filter } = useParams();
-  const today = new Date().toLocaleDateString('es-MX');
+  const { filter, filterDescription } = useParams();
+
+   // Limpia el detalle al cambiar de filtro o cuando no hay tareas visibles
+  useEffect(() => {
+    setSelectedTask(null);
+  }, [filter, filterDescription, setSelectedTask]);
+
+   const today = new Date()/*.toLocaleDateString('es-MX')*/;
+  // const todayISO = new Date().toISOString().split("T")[0];
+  const todayISO = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
   const filteredTasks = tasks.filter((task) => {
+
+    //Filtrado primcipal
+    let matchesFilter = true;
     switch (filter) {
       case "today":
-        return task.expirationDate === today.toString(); 
+        matchesFilter = task.expirationDate === todayISO; 
+        break;
       case "planned":
-        return task.expirationDate !== "" && !task.isCompleted;; 
+        matchesFilter = task.expirationDate !== "" && !task.isCompleted;
+        break;
       case "important":
-        return task.isImportant && !task.isCompleted;
+        matchesFilter = task.isImportant && !task.isCompleted;
+        break;
       case "completed":
-        return task.isCompleted;
+        matchesFilter = task.isCompleted;
+        break;
       case "pending":
-        return !task.isCompleted;
+        matchesFilter = !task.isCompleted;
+        break;
       default:
-        return true;
+        matchesFilter = true;
+      break;
     }
+
+    //Filtrado por búsqueda
+    const matchesSearch = filterDescription
+    ? task.description.toLowerCase().includes(filterDescription.toLowerCase())
+    : true;
+    
+    return matchesFilter && matchesSearch;
   });
 
   // Funciones
@@ -33,28 +57,53 @@ function TaskList({ tasks, setTasks, setSelectedTask }) {
 
   const handleToggleComplete = (id) => {
     setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, isCompleted: !t.isCompleted } : t))
+      prev.map((t) =>
+        t.id === id ? { ...t, isCompleted: !t.isCompleted } : t
+      )
     );
+
+    // Si la tarea seleccionada es la que se modificó, actualiza el detalle también
+    setSelectedTask((prev) => {
+      if (prev && prev.id === id) {
+        return { ...prev, isCompleted: !prev.isCompleted };
+      }
+      return prev;
+    });
   };
 
   const handleToggleImportant = (id) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, isImportant: !t.isImportant } : t))
-    );
-  };
+  setTasks((prev) =>
+    prev.map((t) =>
+      t.id === id ? { ...t, isImportant: !t.isImportant } : t
+    )
+  );
+
+  //Si la tarea seleccionada es la que se modificó, actualiza el detalle también
+  setSelectedTask((prev) => {
+    if (prev && prev.id === id) {
+      return { ...prev, isImportant: !prev.isImportant };
+    }
+    return prev;
+  });
+};
 
   const handleDelete = (id) => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
+  const listTitle = 
+    filter === "today" ? "Hoy" 
+    : filter === "important" ? "Importante"
+    : filter === "planned" ? "Planeado"
+    : filter === "pending" ? "Pendientes"
+    : filter === "completed" ? "Completadas"
+    : "Todas";
+
   return (
-    <div className="task-list h-75">
+    <div className="task-list flex-grow-1 overflow-auto pe-2">
       <div className="d-flex justify-content-center align-items-center mb-3 text-primary">
-        <FontAwesomeIcon icon={faHome} className="me-2" fontSize={"1.5rem"}/>
-        <h3 className="m-0">{filter || "Todas las tareas"}</h3>
-        {/* <Button variant="primary">
-          <i className="fas fa-plus"></i> Nueva tarea
-        </Button> */}
+        <FontAwesomeIcon icon={faHome} className="me-2 c-primary" fontSize={"1.5rem"}/>
+        <h3 className="m-0 c-primary">{listTitle}</h3>
       </div>
 
       {filteredTasks.length > 0 ? (

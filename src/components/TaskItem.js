@@ -1,38 +1,40 @@
-import React, { useState } from "react";
-import { Card, Form} from "react-bootstrap";
+import React from "react";
+import { Card, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar as faSolidStar} from "@fortawesome/free-solid-svg-icons";
-import { faStar as faRegularStar} from "@fortawesome/free-regular-svg-icons";
+import { faStar as faSolidStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar as faRegularStar } from "@fortawesome/free-regular-svg-icons";
 
 function TaskItem({ task, onSelect, onToggleComplete, onDelete, onToggleImportant }) {
-   const [isImportant, setIsImportant] = useState(task.isImportant);
-  
-   const handleToggle = () => {
-    const newValue = !isImportant;
-    setIsImportant(newValue);
-    if (onToggleImportant) {
-      onToggleImportant(task.id, newValue);
-    }
+  // Maneja el click en el checkbox de completado
+  const handleCompleteClick = (e) => {
+    e.stopPropagation(); // evita que se seleccione la tarjeta al cliquear el checkbox
+    if (onToggleComplete) onToggleComplete(task.id);
   };
 
+  // Maneja el click en la estrellita (importante)
+  const handleImportantClick = (e) => {
+    e.stopPropagation(); // evita que se seleccione la tarjeta al cliquear la estrella
+    if (onToggleImportant) onToggleImportant(task.id);
+  };
+
+  function formatDateDisplay(dateString) {
+  // dateString viene en formato "YYYY-MM-DD"
+  const [year, month, day] = dateString.split("-");
+  return `${day}/${month}/${year}`;
+}
   return (
-    <Card 
+    <Card
       className="mb-2 shadow-sm task-item"
-      onClick={() => onSelect(task)}
-      style={{
-        cursor: "pointer",
-      }}
+      onClick={() => onSelect && onSelect(task)}
+      style={{ cursor: "pointer" }}
     >
       <Card.Body className="d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center gap-2">
           {/* Checkbox para marcar como completada */}
           <Form.Check
             type="checkbox"
-            checked={task.isCompleted}
-            onChange={(e) => {
-              e.stopPropagation();
-              onToggleComplete(task.id);
-            }}
+            checked={!!task.isCompleted}
+            onChange={handleCompleteClick}
           />
 
           {/* Descripción de la tarea */}
@@ -43,30 +45,19 @@ function TaskItem({ task, onSelect, onToggleComplete, onDelete, onToggleImportan
               {task.description}
             </Card.Title>
             <small className="text-secondary">
-              {task.expirationDate ? `Vence: ${task.expirationDate}` : ""}
+              {task.expirationDate ? `Vence: ${formatDateDisplay(task.expirationDate)}` : ""}
             </small>
           </div>
         </div>
 
-        {/* Botón eliminar (ícono FontAwesome) */}
-        {/* <Button
-          variant="light"
-          size="sm"
-          // onClick={(e) => {
-          //   e.stopPropagation();
-          //   onDelete(task.id);
-          // }}
-        >
-        </Button> */}
-
-         <FontAwesomeIcon
-        icon={isImportant ? faSolidStar : faRegularStar}
-        className={`fs-5 isImportantIcon ${isImportant ? "text-warning" : "text-secondary"}`}
-        style={{ cursor: "pointer" }}
-        onClick={() => {handleToggle();}}
-        title={isImportant ? "Marcado como importante" : "Marcar como importante"}
-      />
-        
+        {/* Ícono de importante */}
+        <FontAwesomeIcon
+          icon={task.isImportant ? faSolidStar : faRegularStar}
+          className={`fs-5 isImportantIcon text-secondary`}
+          style={{ cursor: "pointer" }}
+          onClick={handleImportantClick}
+          title={task.isImportant ? "Marcado como importante" : "Marcar como importante"}
+        />
       </Card.Body>
     </Card>
   );

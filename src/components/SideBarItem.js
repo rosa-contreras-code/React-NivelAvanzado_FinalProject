@@ -14,7 +14,7 @@ function SidebarItem({to, icon, label, count}) {
             {label}
           </div>
             
-           {count > 0 && <Badge  bg="secondary">{count}</Badge>}
+           {count > 0 && <Badge  bg="none" className="badge-count">{count}</Badge>}
         </NavLink>
     );
 }

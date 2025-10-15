@@ -14,10 +14,12 @@ import "../css/Sidebar.css";
 import "../App.css"
 
 function Sidebar({ tasks }) {
-  const today = new Date().toLocaleDateString("es-MX");
+  const today = new Date();
+  // const todayISO = new Date().toISOString().split("T")[0];
+  const todayISO = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
   const counts = {
     today: tasks.filter(
-      (t) => t.expirationDate === today.toString() && !t.isCompleted
+      (t) => t.expirationDate === todayISO.toString() && !t.isCompleted
     ).length,
     planned: tasks.filter((t) => t.expirationDate !== "" && !t.isCompleted)
       .length,
