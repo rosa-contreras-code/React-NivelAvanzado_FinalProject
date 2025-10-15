@@ -65,11 +65,22 @@ main > *:last-child {
 }
 
 .main-layout {
-  flex-grow: 1;
+  /* flex-grow: 1; */
   display: flex;
   flex-direction: row;
   min-height: calc(100vh - 120px); /* Resta altura del header + footer */
 }
+.main-layout > .col {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-layout main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 
 /* TaskDetails visualmente integrado */
 .task-details .card {
@@ -117,15 +128,25 @@ footer {
   padding: 10px;
   padding-right: 20px;
 }
+.search-box {
+  max-width: 300px; /* ajusta según prefieras */
+  width: 100%;
+  margin: 0 auto; /* centrar */
+}
 
-.search-box .search-icon {
+.search-box input {
+  padding-right: 2.5rem; /* espacio para el icono */
+}
+
+.search-icon {
   position: absolute;
-  right: 25px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--color-text-secondary);
   pointer-events: none;
 }
+
 
 .btn-outline-secondary {
   border-color: var(--color-primary);

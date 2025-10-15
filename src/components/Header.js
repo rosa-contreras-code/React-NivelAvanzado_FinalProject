@@ -1,10 +1,10 @@
-import { Navbar, Container, Form } from 'react-bootstrap';
+import { Navbar, Container, Form, Button } from 'react-bootstrap';
 import { useNavigate, useLocation  } from "react-router-dom";
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faBars  } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState, useEffect } from 'react';
 
-function Header() {
+function Header( {onToggleSidebar }) {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -30,15 +30,16 @@ function Header() {
 
   return (
     <Navbar className='navbar py-2'>
-      {/* <Container fluid className="d-flex justify-content-center w-sm-auto w-25">
-       <Form className=" d-flex justify-content-center align-items-center">
-            <Form.Control type="search" placeholder="Buscar" className="me-2" aria-label="Search" onChange={handleSearch}/>
-            <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon"/>
-        </Form>
-      </Container> */}
       
-      <Container fluid className="d-flex justify-content-center w-sm-auto w-25">
-        <div className="search-box position-relative">
+      <Container fluid className="d-flex align-items-center justify-content-center">
+        <Button 
+          variant="secondary" 
+          className="d-md-none me-2"
+          onClick={onToggleSidebar}
+        >
+          <FontAwesomeIcon icon={faBars} />
+        </Button>
+        <div className="search-box position-relative flex-grow-1">
           <Form.Control
             type="search"
             placeholder="Buscar"

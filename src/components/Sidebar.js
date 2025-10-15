@@ -13,7 +13,7 @@ import {
 import "../css/Sidebar.css";
 import "../App.css"
 
-function Sidebar({ tasks }) {
+function Sidebar({ tasks, onSelect  }) {
   const today = new Date();
   // const todayISO = new Date().toISOString().split("T")[0];
   const todayISO = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
@@ -42,18 +42,21 @@ function Sidebar({ tasks }) {
           icon={faSun}
           label={"Hoy"}
           count={counts.today}
+          onClick={onSelect}
         />
         <SidebarItem
           to={"/tasks/important"}
           icon={faStar}
           label={"Importante"}
           count={counts.important}
+          onClick={onSelect}
         />
         <SidebarItem
           to={"/tasks/planned"}
           icon={faCalendarAlt}
           label={"Planeado"}
           count={counts.planned}
+          onClick={onSelect}
         />
         <hr />
         <SidebarItem
@@ -61,18 +64,21 @@ function Sidebar({ tasks }) {
           icon={faHome}
           label={"Todas"}
           count={counts.all}
+          onClick={onSelect}
         />
         <SidebarItem
           to={"/tasks/pending"}
           icon={faClock}
           label={"Pendientes"}
           count={counts.pending}
+          onClick={onSelect}
         />
         <SidebarItem
           to={"/tasks/completed"}
           icon={faCheckCircle}
           label={"Completadas"}
           count={counts.completed}
+          onClick={onSelect}
         />
       </Nav>
     </div>

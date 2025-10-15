@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faCalendarDays, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { useEffect } from 'react';
 import styled from 'styled-components';
+import TaskList from './TaskList';
 
 const ButtonDelete = styled.button`
     background-color: #404040;
@@ -47,6 +48,9 @@ function TaskDetails({ selectedTask, setSelectedTask, setTasks }) {
   };
 
   const updateTaskField = (field, value) => {
+    console.log("🔹 updateTaskField llamado");
+  console.log("Campo:", field, "Valor:", value);
+  console.log("SelectedTask ID:", selectedTask?.id);
     // Actualiza en la lista global
     setTasks((prev) => {
       const updatedTasks = prev.map((t) =>
@@ -73,16 +77,31 @@ function TaskDetails({ selectedTask, setSelectedTask, setTasks }) {
 
   return (
     // <div className="task-details h-100">
-    <Card className="p-3 shadow-sm border-0 h-100" style={{ backgroundColor: "var(--color-footer)" }}>
-      <Card.Body className='d-flex flex-column h-100'>
-        <Form className="flex-grow-1 d-flex flex-column">
+    <Card
+      className="p-3 shadow-sm border-0 h-100"
+      style={{ backgroundColor: "var(--color-footer)" }}
+    >
+      <Card.Body className="d-flex flex-column h-100">
+        <Form
+          className="flex-grow-1 d-flex flex-column"
+          onSubmit={(e) => e.preventDefault()}
+        >
           <Form.Group className="mb-3 d-flex align-items-center gap-2">
-            <Form.Check type="checkbox" checked={selectedTask.isCompleted} 
-            onChange={(e)=> updateTaskField("isCompleted", e.target.checked)} className='checkbox'/>
+            <Form.Check
+              type="checkbox"
+              checked={selectedTask.isCompleted}
+              onChange={(e) => updateTaskField("isCompleted", e.target.checked)}
+              className="checkbox"
+            />
             <Form.Control
               type="text"
               value={selectedTask.description}
-               onChange={(e) => updateTaskField("description", e.target.value)}
+              onChange={(e) => updateTaskField("description", e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault(); // evita submit
+                }
+              }}
               style={{
                 color: "var(--color-primary)",
                 fontWeight: "bold",
@@ -96,14 +115,16 @@ function TaskDetails({ selectedTask, setSelectedTask, setTasks }) {
             <Form.Control
               type="date"
               value={selectedTask.expirationDate || ""}
-              onChange={(e) => updateTaskField("expirationDate", e.target.value)}
+              onChange={(e) =>
+                updateTaskField("expirationDate", e.target.value)
+              }
             />
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Control
               as="textarea"
-              placeholder='Nota'
+              placeholder="Nota"
               rows={3}
               value={selectedTask.notes || ""}
               onChange={(e) => updateTaskField("notes", e.target.value)}
@@ -119,10 +140,10 @@ function TaskDetails({ selectedTask, setSelectedTask, setTasks }) {
           />
 
           <div className="d-flex justify-content-between align-items-center mt-auto pt-3 border-top">
-            <Card.Text className="text-secondary small">Creada el {selectedTask.creationDate}</Card.Text>
-            <ButtonDelete
-              onClick={handleDelete}
-            >
+            <Card.Text className="text-secondary small my-0">
+              Creada el {selectedTask.creationDate}
+            </Card.Text>
+            <ButtonDelete onClick={handleDelete}>
               <FontAwesomeIcon icon={faTrash} />
             </ButtonDelete>
             {/* <Button variant="light" size="sm">

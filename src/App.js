@@ -1,13 +1,14 @@
 import {React, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 //Style
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Offcanvas } from "react-bootstrap";
 import './App.css';
 
 //Components
 import Header from './components/Header';
 import Sidebar from "./components/Sidebar";
 import TaskDetails from "./components/TaskDetails";
+import TaskDetailsModal from "./components/TaskDetailsModal";
 import TaskForm from "./components/TaskForm";
 import Footer from "./components/Footer";
 import TaskList from "./components/TaskList";
@@ -15,6 +16,7 @@ import TaskList from "./components/TaskList";
 
 function App() {
   const [selectedTask, setSelectedTask] = useState(null);
+   const [showSidebar, setShowSidebar] = useState(false);
   const [tasks, setTasks] = useState(() => {
     const storedTasks = localStorage.getItem("tasks");
     try {
@@ -39,26 +41,72 @@ function App() {
   return (
     <Router>
       <div className="d-flex flex-column min-vh-100 bg-light px-0">
-        <Header />
-        <Container fluid className="main-layout px-0">
+        <Header onToggleSidebar={() => setShowSidebar(true)} />
+
+        {window.innerWidth < 768 && (
+          <Offcanvas show={showSidebar} onHide={() => setShowSidebar(false)} >
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title>Menú</Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+              <Sidebar tasks={tasks} onSelect={() => setShowSidebar(false)} />
+            </Offcanvas.Body>
+          </Offcanvas>
+        )}
+
+        <Container fluid className="main-layout px-0 flex-grow-1">
           <Row className="g-0 flex-grow-1 w-100">
-            <Col xs={"auto"} className="border-end p-0">
-              <Sidebar  tasks={tasks}/>
+            <Col xs={12} md="auto" className="border-end p-0 d-none d-md-block">
+              <Sidebar tasks={tasks} />
             </Col>
-            <Col className="p-4 flex-grow-1 bg-ligth d-flex flex-column">
-              <main className="p-4 flex-grow-1">
+            <Col
+              xs={12}
+              md
+              className="p-4 flex-grow-1 bg-ligth d-flex flex-column"
+            >
+              <main className="p-4 flex-grow-1  d-flex flex-column">
                 <Routes>
-                  <Route path="/tasks/" element={<Navigate to="/tasks/all" />} />
-                  <Route path="/tasks/:filter/:filterDescription?" element={<TaskList tasks={tasks} setTasks={setTasks} setSelectedTask={setSelectedTask} />} />
+                  <Route path="/" element={<Navigate to="/tasks/all" replace />} />
+                  <Route
+                    path="/tasks/"
+                    element={<Navigate to="/tasks/all" />}
+                  />
+                  <Route
+                    path="/tasks/:filter/:filterDescription?"
+                    element={
+                      <TaskList
+                        tasks={tasks}
+                        setTasks={setTasks}
+                        setSelectedTask={setSelectedTask}
+                      />
+                    }
+                  />
                 </Routes>
-                <TaskForm onSubmit={handleSubmit}/>
+                <TaskForm onSubmit={handleSubmit} />
               </main>
             </Col>
-            <Col xs={3} className="p-0 border-start shadow-sm bg-light">
-              <TaskDetails selectedTask={selectedTask} setSelectedTask={setSelectedTask} setTasks={setTasks} />
+            <Col
+              xs={12}
+              md={"auto"}
+              className="p-0 border-start shadow-sm bg-light  d-none d-md-flex"
+            >
+              <TaskDetails
+                selectedTask={selectedTask}
+                setSelectedTask={setSelectedTask}
+                setTasks={setTasks}
+              />
             </Col>
           </Row>
         </Container>
+
+        {/* TaskDetails modal móvil */}
+        {selectedTask && window.innerWidth < 768 && (
+          <TaskDetailsModal
+            selectedTask={selectedTask}
+            setSelectedTask={setSelectedTask}
+            setTasks={setTasks}
+          />
+        )}
         <Footer />
       </div>
     </Router>
