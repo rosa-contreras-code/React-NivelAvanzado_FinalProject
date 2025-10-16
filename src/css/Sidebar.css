@@ -35,12 +35,10 @@
 
 .sidebar .nav-link.active {
   background-color: #8da8bd;
-  /* color: #fff; */
   font-weight: 600;
 }
 
 .sidebar .nav-link.active > *{
-  /* color: #fff; */
   font-weight: 600;
 }
 
@@ -50,4 +48,11 @@
 
 .sidebar .nav-link.active .badge-count {
   background-color: #617c8f !important;
+}
+
+.logo,
+.logo svg {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  font-family: 'McLaren', sans-serif;
 }

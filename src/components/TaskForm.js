@@ -1,39 +1,38 @@
-
+import { useState, useRef } from "react";
+import { useLocation } from "react-router-dom";
+import styled from "styled-components";
 import { Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
-import { useLocation } from "react-router-dom";
 
 const ButtonAdd = styled.button`
-    display: inline-block;
-    background-color: #587081;
-    color: white;
-    padding: 13px;
-    margin: 0 20px;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    text-align: center;
-    justify-content: center
+  display: inline-block;
+  background-color: #587081;
+  color: white;
+  padding: 13px;
+  margin: 0 20px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  text-align: center;
+  justify-content: center
 
-    /* TRANSICIÓN */
-   transition: background-color 0.3s ease, transform 0.2s ease;
+  /* transición */
+  transition: background-color 0.3s ease, transform 0.2s ease;
     
-    &:hover {
-      background-color: #94a6bd;
-      transform: scale(1.05);
-    }
+  &:hover {
+    background-color: #94a6bd;
+    transform: scale(1.05);
+  }
       
-    &:active {
+  &:active {
     transform: scale(0.95); /* efecto al presionar */
   }
-  `;
-
+`;
 
 function TaskForm({onSubmit}) {
-  const today = new Date()/*.toLocaleDateString("es-MX")*/;
+  const today = new Date();
+  //Formato compatible con input type date
   const todayISO = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
   const location = useLocation();
   const inputRef = useRef(null); // ref para el input
@@ -80,8 +79,8 @@ function TaskForm({onSubmit}) {
     if (currentFilter === "important") {
       newTask.isImportant = true;
     }
-
     onSubmit(newTask);
+
     // Limpiar formulario
     setFormData({
       id: 0,
@@ -92,10 +91,8 @@ function TaskForm({onSubmit}) {
       expirationDate: "",
       notes: "",
     });
-    inputRef.current.focus(); // mantiene el foco
+    inputRef.current.focus(); // mantiene el foco en la caja de texto
   }
-
-  
 
   return (
     <Form className=" d-flex  mt-auto add-task-form" onSubmit={handleSubmit}>
@@ -109,7 +106,7 @@ function TaskForm({onSubmit}) {
         autoFocus
       />
       <ButtonAdd onClick={handleSubmit} type="submit">
-        <FontAwesomeIcon icon={faPlus} className={`fs-5`}/>
+        <FontAwesomeIcon icon={faPlus} className={`fs-5`} />
       </ButtonAdd>
     </Form>
   );

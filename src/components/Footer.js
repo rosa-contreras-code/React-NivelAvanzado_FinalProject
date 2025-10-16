@@ -1,5 +1,3 @@
-
-
 function Footer() {
   return (
     <footer className="bg-light text-end py-3 mt-auto">

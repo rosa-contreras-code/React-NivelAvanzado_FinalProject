@@ -1,6 +1,7 @@
-import { Modal } from 'react-bootstrap';
 import TaskDetails from './TaskDetails';
+import { Modal } from 'react-bootstrap';
 
+//Modal para edición en dispositivos pantallas pequeñas
 function TaskDetailsModal({ selectedTask, setSelectedTask, setTasks }) {
   return (
     <Modal

@@ -1,56 +1,51 @@
-import { Card, Form, Button } from 'react-bootstrap';
+import { useEffect } from 'react';
+import { Card, Form } from 'react-bootstrap';
+import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faCalendarDays, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { useEffect } from 'react';
-import styled from 'styled-components';
-import TaskList from './TaskList';
 
 const ButtonDelete = styled.button`
-    background-color: #404040;
-    color: white;
-    padding: 6px;
-    border: none;
-    border-radius: 5px;
+  background-color: #404040;
+  color: white;
+  padding: 6px;
+  border: none;
+  border-radius: 5px;
 
-    /* TRANSICIÓN */
-   transition: background-color 0.3s ease, transform 0.2s ease;
-    
-    &:hover {
-      background-color: #94a6bd;
-      transform: scale(1.05);
-    }
-      
-    &:active {
+  /* transición */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: #94a6bd;
+    transform: scale(1.05);
+  }
+
+  &:active {
     transform: scale(0.95); /* efecto al presionar */
   }
-  `;
-
+`;
 
 function TaskDetails({ selectedTask, setSelectedTask, setTasks }) {
-  // 🔹 Guardar automáticamente cuando cambia una tarea seleccionada
+  // Guardar automáticamente en el local cuando cambia una tarea seleccionada
   useEffect(() => {
     if (!selectedTask) return; // evita ejecutar si no hay tarea seleccionada
     setTimeout(() => {
-      setTasks(prev => {
+      setTasks((prev) => {
         localStorage.setItem("tasks", JSON.stringify(prev));
         return prev;
       });
     }, 0);
   }, [selectedTask, setTasks]);
 
-   const handleDelete = () => {
+  const handleDelete = () => {
     setTasks((prev) => {
       const updatedTasks = prev.filter((t) => t.id !== selectedTask.id);
-      localStorage.setItem("tasks", JSON.stringify(updatedTasks)); // 👈 persistencia al eliminar
+      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
       return updatedTasks;
     });
     setSelectedTask(null);
   };
 
   const updateTaskField = (field, value) => {
-    console.log("🔹 updateTaskField llamado");
-  console.log("Campo:", field, "Valor:", value);
-  console.log("SelectedTask ID:", selectedTask?.id);
     // Actualiza en la lista global
     setTasks((prev) => {
       const updatedTasks = prev.map((t) =>
@@ -64,19 +59,17 @@ function TaskDetails({ selectedTask, setSelectedTask, setTasks }) {
     setSelectedTask((prev) => ({ ...prev, [field]: value }));
   };
 
-
-
+  //Muestra mensaje por defecto
   if (!selectedTask) {
     return (
-      <div className="text-center text-muted mt-5" >
-        <FontAwesomeIcon icon={faInfoCircle} className='fa-2x mb-3'/>
+      <div className="text-center text-muted mt-5">
+        <FontAwesomeIcon icon={faInfoCircle} className="fa-2x mb-3" />
         <p>Selecciona una tarea para ver o editar los detalles.</p>
       </div>
     );
   }
 
   return (
-    // <div className="task-details h-100">
     <Card
       className="p-3 shadow-sm border-0 h-100"
       style={{ backgroundColor: "var(--color-footer)" }}
@@ -146,14 +139,10 @@ function TaskDetails({ selectedTask, setSelectedTask, setTasks }) {
             <ButtonDelete onClick={handleDelete}>
               <FontAwesomeIcon icon={faTrash} />
             </ButtonDelete>
-            {/* <Button variant="light" size="sm">
-              <i className="fas fa-edit me-2"></i> Editar
-            </Button> */}
           </div>
         </Form>
       </Card.Body>
     </Card>
-    // </div>
   );
 }
 

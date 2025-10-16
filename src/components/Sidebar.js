@@ -10,13 +10,15 @@ import {
   faSun,
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
+import "../App.css";
 import "../css/Sidebar.css";
-import "../App.css"
 
 function Sidebar({ tasks, onSelect  }) {
   const today = new Date();
-  // const todayISO = new Date().toISOString().split("T")[0];
-  const todayISO = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  const todayISO = `${today.getFullYear()}-${String(
+    today.getMonth() + 1
+  ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
   const counts = {
     today: tasks.filter(
       (t) => t.expirationDate === todayISO.toString() && !t.isCompleted

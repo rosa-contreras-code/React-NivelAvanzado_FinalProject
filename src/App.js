@@ -1,22 +1,22 @@
-import {React, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-//Style
 import { Container, Row, Col, Offcanvas } from "react-bootstrap";
 import './App.css';
-
 //Components
 import Header from './components/Header';
 import Sidebar from "./components/Sidebar";
+import TaskList from "./components/TaskList";
+import TaskForm from "./components/TaskForm";
 import TaskDetails from "./components/TaskDetails";
 import TaskDetailsModal from "./components/TaskDetailsModal";
-import TaskForm from "./components/TaskForm";
 import Footer from "./components/Footer";
-import TaskList from "./components/TaskList";
 
 
 function App() {
   const [selectedTask, setSelectedTask] = useState(null);
-   const [showSidebar, setShowSidebar] = useState(false);
+  //Reponsividad
+  const [showSidebar, setShowSidebar] = useState(false);
+  //Lista
   const [tasks, setTasks] = useState(() => {
     const storedTasks = localStorage.getItem("tasks");
     try {
@@ -26,25 +26,28 @@ function App() {
       return [];
     }
   });
-   // Guardar tareas en localStorage cada vez que cambien
+  
+  // Guardar tareas en localStorage cada vez que cambien
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  const handleSubmit = (formdata) =>{
-    const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
-    const newTask = {...formdata, id: newId};
-    console.log("tarea nueva: ", newTask);
-    setTasks((prevTasks) => [...prevTasks,newTask]);
-  }
+  //Agregar tarea
+  const handleSubmit = (formdata) => {
+    const newId =
+      tasks.length > 0 ? Math.max(...tasks.map((t) => t.id)) + 1 : 1;
+    const newTask = { ...formdata, id: newId };
+    setTasks((prevTasks) => [...prevTasks, newTask]);
+  };
 
   return (
     <Router>
       <div className="d-flex flex-column min-vh-100 bg-light px-0">
         <Header onToggleSidebar={() => setShowSidebar(true)} />
 
+        {/* Sidebar en pantallas pequeñas */}
         {window.innerWidth < 768 && (
-          <Offcanvas show={showSidebar} onHide={() => setShowSidebar(false)} >
+          <Offcanvas show={showSidebar} onHide={() => setShowSidebar(false)}>
             <Offcanvas.Header closeButton>
               <Offcanvas.Title>Menú</Offcanvas.Title>
             </Offcanvas.Header>
@@ -66,7 +69,10 @@ function App() {
             >
               <main className="p-4 flex-grow-1  d-flex flex-column">
                 <Routes>
-                  <Route path="/" element={<Navigate to="/tasks/all" replace />} />
+                  <Route
+                    path="/"
+                    element={<Navigate to="/tasks/all" replace />}
+                  />
                   <Route
                     path="/tasks/"
                     element={<Navigate to="/tasks/all" />}

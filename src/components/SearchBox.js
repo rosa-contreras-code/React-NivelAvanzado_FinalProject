@@ -1,6 +1,6 @@
+import { InputGroup, Form, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { InputGroup, Form, Button } from 'react-bootstrap';
 
 function SearchBox({ searchValue, onSearchChange, onSearch }) {
   return (
@@ -11,7 +11,7 @@ function SearchBox({ searchValue, onSearchChange, onSearch }) {
         value={searchValue}
         onChange={(e) => onSearchChange(e.target.value)}
       />
-      {/* visible solo en pantallas pequeñas */}
+      {/* visible solo en pantallas pequeñas para mostrar el sidebar*/}
       <Button 
         variant="outline-secondary" 
         onClick={onSearch} 
