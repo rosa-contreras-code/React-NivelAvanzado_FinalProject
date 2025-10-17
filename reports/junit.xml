@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="3" failures="0" errors="0" time="4.047">
+  <testsuite name="TaskDetails Component" errors="0" failures="0" skipped="0" timestamp="2025-10-17T17:32:26" time="2.48" tests="3">
+    <testcase classname="TaskDetails Component debe mostrar la descripción de la tarea seleccionada" name="TaskDetails Component debe mostrar la descripción de la tarea seleccionada" time="0.088">
+    </testcase>
+    <testcase classname="TaskDetails Component editar descripción llama a setTasks" name="TaskDetails Component editar descripción llama a setTasks" time="0.34">
+    </testcase>
+    <testcase classname="TaskDetails Component checkbox &apos;Importante&apos; alterna el estado" name="TaskDetails Component checkbox &apos;Importante&apos; alterna el estado" time="0.115">
+    </testcase>
+  </testsuite>
+</testsuites>

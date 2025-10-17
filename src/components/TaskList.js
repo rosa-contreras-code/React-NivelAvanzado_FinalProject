@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import TaskItem from "../components/TaskItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,37 +14,37 @@ function TaskList({ tasks, setTasks, setSelectedTask }) {
 
   const today = new Date();
   const todayISO = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-  const filteredTasks = tasks.filter((task) => {
-    //Filtrado principal
-    let matchesFilter = true;
-    switch (filter) {
-      case "today":
-        matchesFilter = task.expirationDate === todayISO; 
-        break;
-      case "planned":
-        matchesFilter = task.expirationDate !== "" && !task.isCompleted;
-        break;
-      case "important":
-        matchesFilter = task.isImportant && !task.isCompleted;
-        break;
-      case "completed":
-        matchesFilter = task.isCompleted;
-        break;
-      case "pending":
-        matchesFilter = !task.isCompleted;
-        break;
-      default:
-        matchesFilter = true;
-      break;
-    }
+  
+  const filteredTasks = useMemo(() => {
+    return tasks.filter((task) => {
+      let matchesFilter = true;
+      switch (filter) {
+        case "today":
+          matchesFilter = task.expirationDate === todayISO; 
+          break;
+        case "planned":
+          matchesFilter = task.expirationDate !== "" && !task.isCompleted;
+          break;
+        case "important":
+          matchesFilter = task.isImportant && !task.isCompleted;
+          break;
+        case "completed":
+          matchesFilter = task.isCompleted;
+          break;
+        case "pending":
+          matchesFilter = !task.isCompleted;
+          break;
+        default:
+          matchesFilter = true;
+      }
 
-    //Filtrado por caja de búsqueda
-    const matchesSearch = filterDescription
-    ? task.description.toLowerCase().includes(filterDescription.toLowerCase())
-    : true;
-    
-    return matchesFilter && matchesSearch;
-  });
+      const matchesSearch = filterDescription
+        ? task.description.toLowerCase().includes(filterDescription.toLowerCase())
+        : true;
+
+      return matchesFilter && matchesSearch;
+    });
+  }, [tasks, filter, filterDescription, todayISO]); // recalcula solo si cambian estas dependencias
 
   const handleSelectTask = (task) => {
     setSelectedTask(task);
@@ -121,4 +121,4 @@ function TaskList({ tasks, setTasks, setSelectedTask }) {
   );
 }
 
-export default TaskList;
+export default React.memo(TaskList);

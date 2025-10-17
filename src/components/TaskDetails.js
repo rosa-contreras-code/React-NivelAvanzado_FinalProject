@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect } from 'react';
 import { Card, Form } from 'react-bootstrap';
 import styled from 'styled-components';
@@ -127,6 +128,7 @@ function TaskDetails({ selectedTask, setSelectedTask, setTasks }) {
           <Form.Check
             type="checkbox"
             label="Importante"
+            aria-label="Importante"
             checked={selectedTask.isImportant}
             onChange={(e) => updateTaskField("isImportant", e.target.checked)}
             className="mb-2"
