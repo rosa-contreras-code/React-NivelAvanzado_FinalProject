@@ -46,6 +46,11 @@ function TaskList({ tasks, setTasks, setSelectedTask }) {
     });
   }, [tasks, filter, filterDescription, todayISO]); // recalcula solo si cambian estas dependencias
 
+  
+  if (!Array.isArray(tasks)) {
+    return <p className="text-center text-secondary mt-4">Cargando tareas...</p>;
+  }
+  
   const handleSelectTask = (task) => {
     setSelectedTask(task);
   };
